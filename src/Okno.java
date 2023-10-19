@@ -1,18 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Okno extends JFrame {
     private final CardLayout cardLayout;
     private final JPanel pUser, pAdmin, pButton, pCard, pAdminb;
     private final JButton bAdmin, bUser, bDFilm, bDSeans, bDSala;
 
+    private final List<Sala> sale = new ArrayList<>();
+    private final List<Film> filmy = new ArrayList<>();
+    private final List<Seans> seanse = new ArrayList<>();
+    private final List<Bilet> bilety = new ArrayList<>();
+
     public Okno(){
         setLayout(new BorderLayout());
         cardLayout = new CardLayout();
 
-        pUser = new JPanel();
+        pUser = new JPanel(new FlowLayout());
         pUser.setLayout(new BoxLayout(pUser, BoxLayout.Y_AXIS));
-        pAdmin = new JPanel();
+        pAdmin = new JPanel(new FlowLayout());
         pButton = new JPanel(new FlowLayout());
         pCard = new JPanel(cardLayout);
         pAdminb = new JPanel(new FlowLayout());
@@ -76,14 +84,125 @@ public class Okno extends JFrame {
     }
 
     private void dodajFilm(){
+        JPanel panel = new JPanel();
+        JTextField tfTytul = new JTextField(10);
+        JTextArea taOpis = new JTextArea(5, 20);
+        JTextField tfCzas = new JTextField(5);
+        JTextField tfWiek = new JTextField(5);
 
+        panel.add(new JLabel("Tytuł:"));
+        panel.add(tfTytul);
+        panel.add(new JLabel("opis:"));
+        panel.add(taOpis);
+        panel.add(new JLabel("czas:"));
+        panel.add(tfCzas);
+        panel.add(new JLabel("minimalny wiek:"));
+
+
+        int resoult = JOptionPane.showConfirmDialog(null, panel, "Podaj dane filmu:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (resoult == JOptionPane.OK_OPTION){
+            String tytul = tfTytul.getText();
+            String opis = taOpis.getText();
+            int czas;
+            int wiek;
+            try {
+                czas = Integer.parseInt(tfCzas.getText());
+                wiek = Integer.parseInt(tfWiek.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Błędne wartości");
+                return;
+            }
+
+            Film film = new Film(tytul, opis, czas, wiek);
+            filmy.add(film);
+
+            JOptionPane.showMessageDialog(null, "Film dodany poyślnie");
+        }
     }
 
     private void dodajSeans(){
+        JPanel panel = new JPanel();
+        JComboBox<Film> cbFilm = new JComboBox<>(filmy.toArray(new Film[0]));
+        JComboBox<Sala> cbSala = new JComboBox<>(sale.toArray(new Sala[0]));
+        JTextField tfData = new JTextField(10);
+        JTextField tfGodzina = new JTextField(5);
+        JTextField tfCena = new JTextField(5);
 
+        panel.add(cbFilm);
+        panel.add(new JLabel("Data (RRRR-MM-DD):"));
+        panel.add(tfData);
+        panel.add(new JLabel("Godzina (HH:MM):"));
+        panel.add(tfGodzina);
+        panel.add(new JLabel("Cena:"));
+        panel.add(tfCena);
+        panel.add(cbSala);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Podaj dane seansu:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION){
+            Film film = (Film) cbFilm.getSelectedItem();
+            String data = tfData.getText();
+            String godz = tfGodzina.getText();
+            int cena;
+            LocalDateTime start;
+            Sala sala = (Sala) cbSala.getSelectedItem();
+
+            try {
+                cena = Integer.parseInt(tfCena.getText());
+            } catch (NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Błędne wartości");
+                return;
+            }
+
+            try {
+                start = LocalDateTime.parse(data + "T" + godz + ":00");
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(null, "Błędne wartości");
+                return;
+            }
+
+            Seans seans = new Seans(film, start, cena);
+            assert sala != null;
+            if (sala.dodajSeans(seans)){
+                seanse.add(seans);
+                JOptionPane.showMessageDialog(null, "Seans dodany poyślnie");
+            } else {
+                JOptionPane.showMessageDialog(null, "Wystąpił błąd");
+            }
+        }
     }
 
     private void dodajSala(){
+        JPanel panel = new JPanel();
+        JTextField tfNumer = new JTextField(10);
+        JTextField tfRzedy = new JTextField(10);
+        JTextField tfMiejsca = new JTextField(10);
 
+        panel.add(new JLabel("Numer sali:"));
+        panel.add(tfNumer);
+        panel.add(new JLabel("Liczba rzędów:"));
+        panel.add(tfRzedy);
+        panel.add(new JLabel("Liczba miejsc w rzędzie:"));
+        panel.add(tfMiejsca);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Podaj dane sali:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION){
+            int numer;
+            int rzedy;
+            int miejsca;
+            try {
+                numer = Integer.parseInt(tfNumer.getText());
+                rzedy = Integer.parseInt(tfRzedy.getText());
+                miejsca = Integer.parseInt(tfMiejsca.getText());
+            } catch (NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Błędne wartości");
+                return;
+            }
+
+            Sala sala = new Sala(numer, rzedy, miejsca);
+            sale.add(sala);
+
+            JOptionPane.showMessageDialog(null, "Sala dodana pomyślnie");
+        }
     }
 }

@@ -1,11 +1,13 @@
 public class Film {
     private final String tytul, opis;
     private final int czas;
+    private final int wiek;
 
-    public Film(String tytul, String opis, int czas) {
+    public Film(String tytul, String opis, int czas, int wiek) {
         this.tytul = tytul;
         this.opis = opis;
         this.czas = czas;
+        this.wiek = wiek;
     }
 
     public String getTytul() {
@@ -18,5 +20,13 @@ public class Film {
 
     public int getCzas() {
         return czas;
+    }
+
+    public int getWiek() {
+        return wiek;
+    }
+
+    public boolean tylkoDlaDoroslych(){
+        return wiek >= 18;
     }
 }

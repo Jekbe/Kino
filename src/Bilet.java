@@ -22,8 +22,9 @@ public class Bilet {
     }
 
     public void wypiszBilet(){
-        System.out.println("Tytuł: " + seans.getTytul());
+        System.out.println("Tytuł: " + seans.getFilm().getTytul());
         System.out.println("Godzina: " + seans.getStart());
         System.out.println("Miejsce: " + siedzenie.getRzad() + "r " + siedzenie.getMiejsce() + "m");
+        System.out.println("Cena biletu: " + seans.getCena());
     }
 }

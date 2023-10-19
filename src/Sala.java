@@ -28,16 +28,23 @@ public class Sala {
         return this.miejsca[r][m];
     }
 
-    public void dodajSeans(Seans seans){
-        seanse.add(seans);
+    public boolean dodajSeans(Seans nowySeans){
+        for (Seans seans : seanse) {
+            if (seans.getStart().equals(nowySeans.getStart())) {
+                return false;
+            }
+        }
+
+        seanse.add(nowySeans);
+        return true;
     }
 
     public void pokazSeanse(){
         for (int f1 = 0; f1 < seanse.size(); f1++) {
             Seans seans = seanse.get(f1);
             System.out.println("ID: " + (f1 + 1));
-            System.out.println("Tytuł: " + seans.getTytul());
-            System.out.println("Czas trwania: " + seans.getCzas());
+            System.out.println("Tytuł: " + seans.getFilm().getTytul());
+            System.out.println("Czas trwania: " + seans.getFilm().getTytul());
             System.out.println("Godzina rozpoczęcia: " + seans.getStart());
         }
     }

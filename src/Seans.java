@@ -1,14 +1,25 @@
 import java.time.LocalDateTime;
 
-public class Seans extends Film{
+public class Seans{
     private final LocalDateTime start;
+    private final int cena;
+    private final Film film;
 
-    public Seans(String tytul, String opis, int czas, int rok, int miesac, int dzien, int godz, int min, Sala sala) {
-        super(tytul, opis, czas);
-        start = LocalDateTime.of(rok, miesac, dzien, godz, min);
+    public Seans(Film film, LocalDateTime start, int cena) {
+        this.film = film;
+        this.start = start;
+        this.cena = cena;
     }
 
     public LocalDateTime getStart(){
         return start;
+    }
+
+    public int getCena() {
+        return cena;
+    }
+
+    public Film getFilm() {
+        return film;
     }
 }
