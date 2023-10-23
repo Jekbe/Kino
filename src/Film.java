@@ -1,7 +1,6 @@
 public class Film {
     private final String tytul, opis;
-    private final int czas;
-    private final int wiek;
+    private final int czas, wiek;
 
     public Film(String tytul, String opis, int czas, int wiek) {
         this.tytul = tytul;
@@ -28,5 +27,10 @@ public class Film {
 
     public boolean tylkoDlaDoroslych(){
         return wiek >= 18;
+    }
+
+    @Override
+    public String toString(){
+        return tytul;
     }
 }

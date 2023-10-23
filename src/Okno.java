@@ -1,18 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Okno extends JFrame {
     private final CardLayout cardLayout;
     private final JPanel pUser, pAdmin, pButton, pCard, pAdminb;
-    private final JButton bAdmin, bUser, bDFilm, bDSeans, bDSala;
-
+    private final JButton bAdmin, bUser, bDFilm, bDSeans, bDSala, bSeans;
     private final List<Sala> sale = new ArrayList<>();
     private final List<Film> filmy = new ArrayList<>();
     private final List<Seans> seanse = new ArrayList<>();
     private final List<Bilet> bilety = new ArrayList<>();
+    JComboBox<Seans> cbSeanse = new JComboBox<>(seanse.toArray(new Seans[0]));
+    JComboBox<Bilet> cbBilety = new JComboBox<>(bilety.toArray(new Bilet[0]));
 
     public Okno(){
         setLayout(new BorderLayout());
@@ -30,6 +32,7 @@ public class Okno extends JFrame {
         bDFilm = new JButton("Dodaj film");
         bDSeans = new JButton("Dodaj Seans");
         bDSala = new JButton("Dodaj Salę");
+        bSeans = new JButton("Pokaż informacje");
 
         pCard.add(pUser, "User");
         pCard.add(pAdmin, "Admin");
@@ -50,10 +53,13 @@ public class Okno extends JFrame {
         bDFilm.addActionListener(e -> dodajFilm());
         bDSeans.addActionListener(e -> dodajSeans());
         bDSala.addActionListener(e -> dodajSala());
+        bSeans.addActionListener(e -> pokazSeans((Seans) cbSeanse.getSelectedItem()));
     }
 
     private void generuj(){
         pUser.add(new JLabel("Panel użytkownika"));
+        pUser.add(cbSeanse);
+        pUser.add(bSeans);
 
         pAdmin.add(new JLabel("Panel administratora"));
         pAdmin.add(pAdminb);
@@ -97,6 +103,7 @@ public class Okno extends JFrame {
         panel.add(new JLabel("czas:"));
         panel.add(tfCzas);
         panel.add(new JLabel("minimalny wiek:"));
+        panel.add(tfWiek);
 
 
         int resoult = JOptionPane.showConfirmDialog(null, panel, "Podaj dane filmu:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -164,9 +171,10 @@ public class Okno extends JFrame {
             assert sala != null;
             if (sala.dodajSeans(seans)){
                 seanse.add(seans);
+                seanse.sort(Comparator.comparing(Seans::getStart));
                 JOptionPane.showMessageDialog(null, "Seans dodany poyślnie");
             } else {
-                JOptionPane.showMessageDialog(null, "Wystąpił błąd");
+                JOptionPane.showMessageDialog(null, "Sala jest zajęta");
             }
         }
     }
@@ -204,5 +212,23 @@ public class Okno extends JFrame {
 
             JOptionPane.showMessageDialog(null, "Sala dodana pomyślnie");
         }
+    }
+
+    private void pokazSeans(Seans seans){
+        JPanel panel = new JPanel();
+        JButton kupBilet = new JButton();
+        kupBilet.addActionListener(e -> kupBilet(seans));
+
+        panel.add(new JLabel("Tytuł: " + seans.getFilm().getTytul()));
+        panel.add(new JLabel("Opis: " + seans.getFilm().getOpis()));
+        panel.add(new JLabel("Czas trwania: " + seans.getFilm().getCzas()));
+        panel.add(new JLabel("Od lat: " + seans.getFilm().getWiek()));
+        panel.add(new JLabel("Godzina seansu: " + seans.getStart()));
+        panel.add(new JLabel("Cena biletu: " + seans.getCena()));
+        panel.add(kupBilet);
+    }
+
+    private void kupBilet(Seans seans){
+
     }
 }

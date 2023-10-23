@@ -48,4 +48,9 @@ public class Sala {
             System.out.println("Godzina rozpoczęcia: " + seans.getStart());
         }
     }
+
+    @Override
+    public String toString(){
+        return Integer.toString(numer);
+    }
 }

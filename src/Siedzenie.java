@@ -1,7 +1,6 @@
 public class Siedzenie {
     private boolean wolne;
-    private final int rzad;
-    private final int miejsce;
+    private final int rzad, miejsce;
 
     public Siedzenie(int rzad, int mmiejsce){
         wolne = true;
