@@ -236,18 +236,19 @@ public class Okno extends JFrame {
     }
 
     private void kupBilet(Seans seans){
-        if (seans.film().tylkoDlaDoroslych()){
-            JOptionPane.showMessageDialog(null, "Film dla dorosłych! Zapytaj o wiek!");
-        }
         JPanel panel = new JPanel();
-        JTextField tfRzad = new JTextField(5), tfMiejsce = new JTextField(5), tfWlasciciel = new JTextField(20);
+        JTextField tfRzad = new JTextField(5), tfMiejsce = new JTextField(5), tfImie = new JTextField(20), tfNazwisko = new JTextField(20), tfWiek = new JTextField(5);
 
         panel.add(new JLabel("Rząd:"));
         panel.add(tfRzad);
         panel.add(new JLabel("Miejsce:"));
         panel.add(tfMiejsce);
-        panel.add(new JLabel("Właściciel:"));
-        panel.add(tfWlasciciel);
+        panel.add(new JLabel("Imię:"));
+        panel.add(tfImie);
+        panel.add(new JLabel("Nazwisko:"));
+        panel.add(tfNazwisko);
+        panel.add(new JLabel("Wiek:"));
+        panel.add(tfWiek);
 
         panel.add(new JLabel("Wolne miejsca: "));
         StringBuilder siedzenia = new StringBuilder("<html>");
@@ -268,12 +269,13 @@ public class Okno extends JFrame {
 
         int result = JOptionPane.showConfirmDialog(this, panel, "Kup bilet", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION){
-            int rzad, miejsce;
-            String wlasciciel = tfWlasciciel.getText();
+            int rzad, miejsce, wiek;
+            String imie = tfImie.getText(), nazwisko = tfNazwisko.getText();
 
             try {
                 rzad = Integer.parseInt(tfRzad.getText()) - 1;
                 miejsce = Integer.parseInt(tfMiejsce.getText()) - 1;
+                wiek = Integer.parseInt(tfWiek.getText());
             } catch (NumberFormatException e){
                 JOptionPane.showMessageDialog(null, "Błędne wartości");
                 return;
@@ -281,7 +283,12 @@ public class Okno extends JFrame {
 
             if (seans.sala().getSiedzenie(rzad, miejsce).getWolne()){
                 seans.sala().getSiedzenie(rzad, miejsce).zajmij();
-                Bilet bilet = new Bilet(seans.sala(), seans, rzad, miejsce, wlasciciel);
+                Bilet bilet = new Bilet(seans.sala(), seans, rzad, miejsce, imie, nazwisko, wiek);
+                if (seans.film().tylkoDlaDoroslych() && bilet.getWiek() < 18){
+                    JOptionPane.showMessageDialog(null, "Film dla dorosłych!");
+                    bilet.getSiedzenie().zwolnij();
+                    return;
+                }
 
                 bilety.add(bilet);
                 cbBilety.setModel(new DefaultComboBoxModel<>(bilety.toArray(new Bilet[0])));

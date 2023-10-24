@@ -44,9 +44,4 @@ public class Sala {
         seanse.add(nowySeans);
         return true;
     }
-
-    @Override
-    public String toString(){
-        return Integer.toString(numer);
-    }
 }

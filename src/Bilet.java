@@ -1,12 +1,11 @@
-public class Bilet {
+public class Bilet extends Osoba {
     private final Seans seans;
     private final Siedzenie siedzenie;
-    private final String wlasciciel;
 
-    public Bilet(Sala sala, Seans seans, int r, int m, String wlasciciel){
+    public Bilet(Sala sala, Seans seans, int r, int m, String imie, String nazwisko, int wiek){
+        super(imie, nazwisko, wiek);
         this.seans = seans;
         siedzenie = sala.getSiedzenie(r, m);
-        this.wlasciciel = wlasciciel;
     }
 
     public Siedzenie getSiedzenie() {
@@ -15,6 +14,6 @@ public class Bilet {
 
     @Override
     public String toString(){
-        return wlasciciel + ": " + seans.toString();
+        return super.toString() + ": " + seans.toString();
     }
 }
