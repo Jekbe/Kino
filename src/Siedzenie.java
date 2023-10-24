@@ -1,23 +1,12 @@
 public class Siedzenie {
     private boolean wolne;
-    private final int rzad, miejsce;
 
-    public Siedzenie(int rzad, int mmiejsce){
+    public Siedzenie(){
         wolne = true;
-        this.rzad = rzad;
-        this.miejsce = mmiejsce;
     }
 
     public boolean getWolne(){
         return wolne;
-    }
-
-    public int getRzad() {
-        return rzad;
-    }
-
-    public int getMiejsce() {
-        return miejsce;
     }
 
     public void zajmij(){
